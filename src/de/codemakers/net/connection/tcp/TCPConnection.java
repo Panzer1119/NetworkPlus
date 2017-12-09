@@ -47,6 +47,9 @@ public abstract class TCPConnection extends AbstractConnection<TCPConnection> {
             return true;
         } catch (Exception ex) {
             NetworkUtil.accept(failure, ex);
+            if (ex instanceof SocketException) {
+                connected = false;
+            }
             return false;
         }
     }
