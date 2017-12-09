@@ -1,5 +1,6 @@
 package de.codemakers.net;
 
+import de.codemakers.net.connection.AbstractConnection;
 import de.codemakers.net.connection.ConnectionInfo;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -81,6 +82,13 @@ public class NetworkUtil {
             ex.printStackTrace();
             return null;
         }
+    }
+
+    public static final boolean sendObject(Object object, AbstractConnection connection) {
+        if (connection == null) {
+            return false;
+        }
+        return connection.send(convertObjectToBytes(object));
     }
 
 }
