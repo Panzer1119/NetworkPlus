@@ -23,6 +23,11 @@ public abstract class AbstractConnection<T> {
         return dataReceiveListeners.remove(dataReceiveListener);
     }
 
+    public final T clearDataReceiveListeners() {
+        dataReceiveListeners.clear();
+        return (T) this;
+    }
+
     protected final boolean receive(final byte[] data, final ConnectionInfo connectionInfo) {
         if (dataReceiveListeners.isEmpty()) {
             return false;
