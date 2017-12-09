@@ -22,8 +22,8 @@ public class Test {
             }
 
             @Override
-            public final boolean receive(byte[] data, ConnectionInfo connectionInfo) {
-                System.out.println(String.format("[SERVER] Received data from \"%s\": %s", connectionInfo, new String(data)));
+            public final boolean receive(byte[] data, TCPConnection connection) {
+                System.out.println(String.format("[SERVER] Received data from \"%s\": %s", connection.getConnectionInfo(), new String(data)));
                 return true;
             }
         };

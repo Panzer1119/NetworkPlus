@@ -37,7 +37,7 @@ public abstract class TCPServer extends AbstractServer<TCPServer, Socket, TCPCon
         final TCPConnection connection = new TCPConnection(socket) {
             @Override
             public final boolean receive(byte[] data) {
-                return ME.receive(data, connectionInfo);
+                return ME.receive(data, this);
             }
         };
         connection.startListening();

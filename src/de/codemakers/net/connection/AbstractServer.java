@@ -42,7 +42,7 @@ public abstract class AbstractServer<T, B, A extends AbstractConnection> {
 
     public abstract boolean accept(A accepted);
 
-    public abstract boolean receive(final byte[] data, ConnectionInfo connectionInfo);
+    public abstract boolean receive(final byte[] data, A connectionInfo);
 
     public final boolean start() {
         return start(-1, null, null);
