@@ -73,7 +73,7 @@ public class NetworkUtil {
         }
     }
 
-    public static final Object convertBytesToObject(byte[] data) throws IOException, ClassNotFoundException {
+    public static final Object convertBytesToObject(byte[] data) {
         try {
             try (ByteArrayInputStream bais = new ByteArrayInputStream(data); ObjectInputStream ois = new ObjectInputStream(bais)) {
                 return ois.readObject();

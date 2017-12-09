@@ -24,7 +24,7 @@ public class Test {
 
             @Override
             public final boolean receive(byte[] data, TCPConnection connection) {
-                System.out.println(String.format("[SERVER] Received data from \"%s\": %s", connection.getConnectionInfo(), new String(data)));
+                System.out.println(String.format("[SERVER] Received data from \"%s\": %s", connection.getConnectionInfo(), NetworkUtil.convertBytesToObject(data)));
                 return true;
             }
         };
@@ -43,7 +43,7 @@ public class Test {
                 try {
                     System.out.println(String.format("[CLIENT] \"%s\" Received data: %s", getConnectionInfo(), NetworkUtil.convertBytesToObject(data)));
                     Thread.sleep(1000);
-                    send("Selber Hi!".getBytes());
+                    send(NetworkUtil.convertObjectToBytes("Selber Hi!"));
                     return true;
                 } catch (Exception ex) {
                     ex.printStackTrace();
