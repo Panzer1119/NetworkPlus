@@ -18,6 +18,7 @@ public abstract class TCPServer extends AbstractServer<TCPServer, Socket, TCPCon
     private final TCPServer ME = this;
     private ServerSocket serverSocket = null;
     private Thread thread_acceptor = null;
+    private boolean not_save_accepted_sockets = false;
 
     public TCPServer() {
         this((ServerSocket) null);
@@ -60,7 +61,9 @@ public abstract class TCPServer extends AbstractServer<TCPServer, Socket, TCPCon
                         final TCPConnection connection = acceptIntern(socket);
                         if (connection != null) {
                             if (accept(connection)) {
-                                accepted.add(connection);
+                                if (!not_save_accepted_sockets) {
+                                    accepted.add(connection);
+                                }
                             } else {
                                 connection.stopListening();
                                 connection.disconnect();
@@ -132,6 +135,15 @@ public abstract class TCPServer extends AbstractServer<TCPServer, Socket, TCPCon
             this.port = serverSocket.getLocalPort();
             this.started = !serverSocket.isClosed();
         }
+        return this;
+    }
+
+    public final boolean isNotSavingAcceptedSockets() {
+        return not_save_accepted_sockets;
+    }
+
+    public final TCPServer setNotSaveAcceptedSockets(boolean not_save_accepted_sockets) {
+        this.not_save_accepted_sockets = not_save_accepted_sockets;
         return this;
     }
 
