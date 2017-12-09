@@ -42,7 +42,6 @@ public class NetworkUtil {
         return new ConnectionInfo(socket.getInetAddress(), socket.getPort());
     }
 
-    //FIXME ThreadPool hier hin setzen!
     public static final <T> void accept(Consumer<T> consumer, T object) {
         if (consumer == null) {
             return;

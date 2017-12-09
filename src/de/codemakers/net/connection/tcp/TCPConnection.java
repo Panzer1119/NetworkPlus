@@ -7,6 +7,7 @@ import de.codemakers.net.exceptions.ConnectionException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.Arrays;
 import java.util.function.Consumer;
 
@@ -15,11 +16,14 @@ import java.util.function.Consumer;
  *
  * @author Paul Hagedorn
  */
-public class TCPConnection extends AbstractConnection<TCPConnection> {
+public abstract class TCPConnection extends AbstractConnection<TCPConnection> {
+
+    public static final int BUFFER_SIZE = 1024;
 
     private Socket socket = null;
     private boolean listening = false;
     private Thread thread_listener = null;
+    private int buffer_size = BUFFER_SIZE;
 
     public TCPConnection() {
         this((Socket) null);
@@ -34,7 +38,7 @@ public class TCPConnection extends AbstractConnection<TCPConnection> {
     }
 
     @Override
-    public final boolean send(byte[] data, Consumer<TCPConnection> success, Consumer<Throwable> failure) {
+    public final boolean send(final byte[] data, Consumer<TCPConnection> success, Consumer<Throwable> failure) {
         try {
             final OutputStream outputStream = socket.getOutputStream();
             outputStream.write(data);
@@ -118,6 +122,15 @@ public class TCPConnection extends AbstractConnection<TCPConnection> {
         return this;
     }
 
+    public final int getBufferSize() {
+        return buffer_size;
+    }
+
+    public final TCPConnection setBufferSize(int buffer_size) {
+        this.buffer_size = buffer_size;
+        return this;
+    }
+
     public final boolean isListening() {
         return listening;
     }
@@ -131,26 +144,27 @@ public class TCPConnection extends AbstractConnection<TCPConnection> {
             thread_listener = new Thread(() -> {
                 try {
                     final InputStream inputStream = socket.getInputStream();
-                    final byte[] data_empty = new byte[1024];
+                    final byte[] data_empty = new byte[buffer_size];
                     while (listening) {
                         final byte[] data = new byte[data_empty.length];
-                        inputStream.read(data); //FIXME Exception fixen, wenn dieser Socket hier geschlossen wird oder die Verbindung verliert
+                        inputStream.read(data);
                         if (Arrays.equals(data, data_empty)) {
-                            continue; //FIXME Wenn das hier Daten vernichtet, ware das schlecht
+                            continue; //FIXME Wenn das hier Daten vernichtet, waere das schlecht
                         }
-                        System.out.println("RECEIVE: " + new String(data));
-                        receive(data, connectionInfo);
+                        receive(data);
                     }
-                    //inputStream.close(); //FIXME Muss das hier sein?
                 } catch (Exception ex) {
-                    System.err.println(this);
-                    ex.printStackTrace();
+                    listening = false;
+                    if (ex instanceof SocketException) {
+                        connected = false;
+                    } else {
+                        ex.printStackTrace();
+                    }
                 }
             });
             thread_listener.start();
             return true;
         } catch (Exception ex) {
-            System.err.println(this);
             ex.printStackTrace();
             listening = false;
             return false;

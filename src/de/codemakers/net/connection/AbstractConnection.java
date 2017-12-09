@@ -1,40 +1,18 @@
 package de.codemakers.net.connection;
 
-import de.codemakers.net.listeners.DataReceiveListener;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Consumer;
 
 /**
  * AbstractConnection
  *
+ * @param <T> Type of connection
+ *
  * @author Paul Hagedorn
  */
 public abstract class AbstractConnection<T> {
 
-    private final ConcurrentLinkedQueue<DataReceiveListener> dataReceiveListeners = new ConcurrentLinkedQueue<>();
     protected ConnectionInfo connectionInfo = null;
     protected boolean connected = false;
-
-    public final boolean addDataReceiveListener(DataReceiveListener dataReceiveListener) {
-        return dataReceiveListeners.add(dataReceiveListener);
-    }
-
-    public final boolean removeDataReceiveListener(DataReceiveListener dataReceiveListener) {
-        return dataReceiveListeners.remove(dataReceiveListener);
-    }
-
-    public final T clearDataReceiveListeners() {
-        dataReceiveListeners.clear();
-        return (T) this;
-    }
-
-    protected final boolean receive(final byte[] data, final ConnectionInfo connectionInfo) {
-        if (dataReceiveListeners.isEmpty()) {
-            return false;
-        }
-        dataReceiveListeners.forEach((dataReceiveListener) -> dataReceiveListener.receive(data, this));
-        return true;
-    }
 
     public final ConnectionInfo getConnectionInfo() {
         return connectionInfo;
@@ -43,6 +21,8 @@ public abstract class AbstractConnection<T> {
     public final boolean hasConnectionInfo() {
         return connectionInfo != null;
     }
+
+    public abstract boolean receive(final byte[] data);
 
     public final boolean send(final byte[] data) {
         return send(data, null, null);
@@ -69,11 +49,11 @@ public abstract class AbstractConnection<T> {
     public abstract boolean connect(ConnectionInfo connectionInfo, Consumer<T> success, Consumer<Throwable> failure);
 
     public final boolean disconnect() {
-        return AbstractConnection.this.disconnect(null, null);
+        return disconnect(null, null);
     }
 
     public final boolean disconnect(Consumer<T> success) {
-        return AbstractConnection.this.disconnect(success, null);
+        return disconnect(success, null);
     }
 
     public abstract boolean disconnect(Consumer<T> success, Consumer<Throwable> failure);
@@ -82,7 +62,8 @@ public abstract class AbstractConnection<T> {
 
     @Override
     public String toString() {
-        return String.format("AbstractConnection: \"%s\", connected: %b, listeners: %s", connectionInfo, connected, dataReceiveListeners.toString());
+        final String simpleName = getClass().getSimpleName();
+        return String.format("%s: \"%s\", connected: %b", simpleName.isEmpty() ? getClass().getSuperclass().getSimpleName() : simpleName, connectionInfo, connected);
     }
 
 }
