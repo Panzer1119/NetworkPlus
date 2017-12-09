@@ -1,6 +1,7 @@
 package de.codemakers.net.connection;
 
 import de.codemakers.net.NetworkUtil;
+import java.io.Serializable;
 import java.net.Inet4Address;
 import java.net.Inet6Address;
 import java.net.InetAddress;
@@ -10,7 +11,7 @@ import java.net.InetAddress;
  *
  * @author Paul Hagedorn
  */
-public class ConnectionInfo {
+public class ConnectionInfo implements Serializable {
 
     private InetAddress inetAddress = null;
     private int port = -1;

@@ -4,11 +4,11 @@ import de.codemakers.net.NetworkUtil;
 import de.codemakers.net.connection.AbstractConnection;
 import de.codemakers.net.connection.ConnectionInfo;
 import de.codemakers.net.exceptions.ConnectionException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.SocketException;
-import java.util.Arrays;
 import java.util.function.Consumer;
 
 /**
@@ -18,12 +18,9 @@ import java.util.function.Consumer;
  */
 public abstract class TCPConnection extends AbstractConnection<TCPConnection> {
 
-    public static final int BUFFER_SIZE = 1024;
-
     private Socket socket = null;
     private boolean listening = false;
     private Thread thread_listener = null;
-    private int buffer_size = BUFFER_SIZE;
 
     public TCPConnection() {
         this((Socket) null);
@@ -125,15 +122,6 @@ public abstract class TCPConnection extends AbstractConnection<TCPConnection> {
         return this;
     }
 
-    public final int getBufferSize() {
-        return buffer_size;
-    }
-
-    public final TCPConnection setBufferSize(int buffer_size) {
-        this.buffer_size = buffer_size;
-        return this;
-    }
-
     public final boolean isListening() {
         return listening;
     }
@@ -147,18 +135,25 @@ public abstract class TCPConnection extends AbstractConnection<TCPConnection> {
             thread_listener = new Thread(() -> {
                 try {
                     final InputStream inputStream = socket.getInputStream();
-                    final byte[] data_empty = new byte[buffer_size];
                     while (listening) {
-                        final byte[] data = new byte[data_empty.length];
-                        inputStream.read(data);
-                        if (Arrays.equals(data, data_empty)) {
-                            continue; //FIXME Wenn das hier Daten vernichtet, waere das schlecht
+                        int temp = inputStream.read();
+                        if (temp == -1) {
+                            connected = false;
+                            break;
                         }
+                        int length = inputStream.available();
+                        final byte[] data_temp = new byte[length];
+                        if (length > 0) {
+                            inputStream.read(data_temp);
+                        }
+                        final byte[] data = new byte[length + 1];
+                        data[0] = (byte) temp;
+                        System.arraycopy(data_temp, 0, data, 1, length);
                         receive(data);
                     }
                 } catch (Exception ex) {
                     listening = false;
-                    if (ex instanceof SocketException) {
+                    if (ex instanceof SocketException || ex instanceof IOException) {
                         connected = false;
                     } else {
                         ex.printStackTrace();

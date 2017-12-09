@@ -1,6 +1,11 @@
 package de.codemakers.net;
 
 import de.codemakers.net.connection.ConnectionInfo;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.function.Consumer;
 
@@ -53,6 +58,29 @@ public class NetworkUtil {
                 ex.printStackTrace();
             }
         }).start();
+    }
+
+    public static final byte[] convertObjectToBytes(Object object) {
+        try {
+            try (ByteArrayOutputStream baos = new ByteArrayOutputStream(); ObjectOutputStream oos = new ObjectOutputStream(baos)) {
+                oos.writeObject(object);
+                return baos.toByteArray();
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
+    public static final Object convertBytesToObject(byte[] data) throws IOException, ClassNotFoundException {
+        try {
+            try (ByteArrayInputStream bais = new ByteArrayInputStream(data); ObjectInputStream ois = new ObjectInputStream(bais)) {
+                return ois.readObject();
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
     }
 
 }

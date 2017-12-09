@@ -9,6 +9,7 @@ import java.util.function.Consumer;
  *
  * @param <T> Type of server
  * @param <B> Type of socket
+ * @param <A> Type of accepted socket
  *
  * @author Paul Hagedorn
  */
@@ -42,7 +43,7 @@ public abstract class AbstractServer<T, B, A extends AbstractConnection> {
 
     public abstract boolean accept(A accepted);
 
-    public abstract boolean receive(final byte[] data, A connectionInfo);
+    public abstract boolean receive(byte[] data, A connectionInfo);
 
     public final boolean start() {
         return start(-1, null, null);

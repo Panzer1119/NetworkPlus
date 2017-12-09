@@ -17,7 +17,8 @@ public class Test {
         final TCPServer server = new TCPServer() {
             @Override
             public final boolean accept(TCPConnection accepted) {
-                accepted.send("Hi!".getBytes());
+                accepted.send(NetworkUtil.convertObjectToBytes("Hi sdgfsdgufubgsdfhisfdfhjsdfgjhsdfhjsdfhjsdfjhsdghjsdgjsdghjsdgffhjsdfjhsdfjhsdfjhsdfhjsdfhjsdfjhsdfgjksdfgfdhjdfghdsauhvepuihnvnauurevanpuvgfdihgunvfaduhvdervgisfvdgnhsdgdgshsugvivgerspvers8gvnresguivgsdfgvrsedusdgfsdgufubgsdfhisfdfhjsdfgjhsdfhjsdfhjsdfjhsdghjsdgjsdghjsdgffhjsdfjhsdfjhsdfjhsdfhjsdfhjsdfjhsdfgjksdfgfdhjdfghdsauhvepuihnvnauurevanpuvgfdihgunvfaduhvdervgisfvdgnhsdgdgshsugvivgerspvers8gvnresguivgsdfgvrsedusdgfsdgufubgsdfhisfdfhjsdfgjhsdfhjsdfhjsdfjhsdghjsdgjsdghjsdgffhjsdfjhsdfjhsdfjhsdfhjsdfhjsdfjhsdfgjksdfgfdhjdfghdsauhvepuihnvnauurevanpuvgfdihgunvfaduhvdervgisfvdgnhsdgdgshsugvivgerspvers8gvnresguivgsdfgvrsedusdgfsdgufubgsdfhisfdfhjsdfgjhsdfhjsdfhjsdfjhsdghjsdgjsdghjsdgffhjsdfjhsdfjhsdfjhsdfhjsdfhjsdfjhsdfgjksdfgfdhjdfghdsauhvepuihnvnauurevanpuvgfdihgunvfaduhvdervgisfvdgnhsdgdgshsugvivgerspvers8gvnresguivgsdfgvrsedusdgfsdgufubgsdfhisfdfhjsdfgjhsdfhjsdfhjsdfjhsdghjsdgjsdghjsdgffhjsdfjhsdfjhsdfjhsdfhjsdfhjsdfjhsdfgjksdfgfdhjdfghdsauhvepuihnvnauurevanpuvgfdihgunvfaduhvdervgisfvdgnhsdgdgshsugvivgerspvers8gvnresguivgsdfgvrsedusdgfsdgufubgsdfhisfdfhjsdfgjhsdfhjsdfhjsdfjhsdghjsdgjsdghjsdgffhjsdfjhsdfjhsdfjhsdfhjsdfhjsdfjhsdfgjksdfgfdhjdfghdsauhvepuihnvnauurevanpuvgfdihgunvfaduhvdervgisfvdgnhsdgdgshsugvivgerspvers8gvnresguivgsdfgvrsedu!"));
+                accepted.send(NetworkUtil.convertObjectToBytes(accepted.getConnectionInfo()));
                 return true;
             }
 
@@ -40,7 +41,7 @@ public class Test {
             @Override
             public final boolean receive(byte[] data) {
                 try {
-                    System.out.println(String.format("[CLIENT] \"%s\" Received data: %s", getConnectionInfo(), new String(data)));
+                    System.out.println(String.format("[CLIENT] \"%s\" Received data: %s", getConnectionInfo(), NetworkUtil.convertBytesToObject(data)));
                     Thread.sleep(1000);
                     send("Selber Hi!".getBytes());
                     return true;

@@ -22,7 +22,7 @@ public abstract class AbstractConnection<T> {
         return connectionInfo != null;
     }
 
-    public abstract boolean receive(final byte[] data);
+    public abstract boolean receive(byte[] data);
 
     public final boolean send(final byte[] data) {
         return send(data, null, null);
