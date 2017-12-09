@@ -27,15 +27,15 @@ public class Test {
                 return true;
             }
         };
-        server.start(NetworkUtil.PORT_DEFAULT, (server_) -> System.out.println("[SERVER] YAY Server started!"), System.err::println);
-        new Thread(() -> {
+        server.start(NetworkUtil.PORT_DEFAULT, (server_) -> {
             try {
+                System.out.println("[SERVER] YAY Server started!");
                 Thread.sleep(7000);
-                server.stop((server_) -> System.out.println("[SERVER] YAY Server stopped!"), System.err::println);
+                server_.stop((server__) -> System.out.println("[SERVER] YAY Server stopped!"), System.err::println);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
-        }).start();
+        }, System.err::println);
         final TCPConnection connection = new TCPConnection() {
             @Override
             public final boolean receive(byte[] data) {
