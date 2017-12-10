@@ -3,10 +3,6 @@ package de.codemakers.net;
 import de.codemakers.net.connection.AbstractConnection;
 import de.codemakers.net.connection.ConnectionInfo;
 import de.codemakers.serialization.SerializationUtil;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.function.Consumer;
 
