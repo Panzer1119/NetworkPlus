@@ -4,6 +4,7 @@ import de.codemakers.net.NetworkUtil;
 import de.codemakers.net.connection.ConnectionInfo;
 import de.codemakers.net.connection.tcp.TCPConnection;
 import de.codemakers.net.connection.tcp.TCPServer;
+import de.codemakers.serialization.SerializationUtil;
 import java.net.InetAddress;
 
 /**
@@ -17,14 +18,14 @@ public class Test {
         final TCPServer server = new TCPServer() {
             @Override
             public final boolean accept(TCPConnection accepted) {
-                accepted.send(NetworkUtil.convertObjectToBytes("Hi sdgfsdgufubgsdfhisfdfhjsdfgjhsdfhjsdfhjsdfjhsdghjsdgjsdghjsdgffhjsdfjhsdfjhsdfjhsdfhjsdfhjsdfjhsdfgjksdfgfdhjdfghdsauhvepuihnvnauurevanpuvgfdihgunvfaduhvdervgisfvdgnhsdgdgshsugvivgerspvers8gvnresguivgsdfgvrsedusdgfsdgufubgsdfhisfdfhjsdfgjhsdfhjsdfhjsdfjhsdghjsdgjsdghjsdgffhjsdfjhsdfjhsdfjhsdfhjsdfhjsdfjhsdfgjksdfgfdhjdfghdsauhvepuihnvnauurevanpuvgfdihgunvfaduhvdervgisfvdgnhsdgdgshsugvivgerspvers8gvnresguivgsdfgvrsedusdgfsdgufubgsdfhisfdfhjsdfgjhsdfhjsdfhjsdfjhsdghjsdgjsdghjsdgffhjsdfjhsdfjhsdfjhsdfhjsdfhjsdfjhsdfgjksdfgfdhjdfghdsauhvepuihnvnauurevanpuvgfdihgunvfaduhvdervgisfvdgnhsdgdgshsugvivgerspvers8gvnresguivgsdfgvrsedusdgfsdgufubgsdfhisfdfhjsdfgjhsdfhjsdfhjsdfjhsdghjsdgjsdghjsdgffhjsdfjhsdfjhsdfjhsdfhjsdfhjsdfjhsdfgjksdfgfdhjdfghdsauhvepuihnvnauurevanpuvgfdihgunvfaduhvdervgisfvdgnhsdgdgshsugvivgerspvers8gvnresguivgsdfgvrsedusdgfsdgufubgsdfhisfdfhjsdfgjhsdfhjsdfhjsdfjhsdghjsdgjsdghjsdgffhjsdfjhsdfjhsdfjhsdfhjsdfhjsdfjhsdfgjksdfgfdhjdfghdsauhvepuihnvnauurevanpuvgfdihgunvfaduhvdervgisfvdgnhsdgdgshsugvivgerspvers8gvnresguivgsdfgvrsedusdgfsdgufubgsdfhisfdfhjsdfgjhsdfhjsdfhjsdfjhsdghjsdgjsdghjsdgffhjsdfjhsdfjhsdfjhsdfhjsdfhjsdfjhsdfgjksdfgfdhjdfghdsauhvepuihnvnauurevanpuvgfdihgunvfaduhvdervgisfvdgnhsdgdgshsugvivgerspvers8gvnresguivgsdfgvrsedu!"));
-                accepted.send(NetworkUtil.convertObjectToBytes(accepted.getConnectionInfo()));
+                accepted.send(SerializationUtil.convertObjectToBytes("Hi sdgfsdgufubgsdfhisfdfhjsdfgjhsdfhjsdfhjsdfjhsdghjsdgjsdghjsdgffhjsdfjhsdfjhsdfjhsdfhjsdfhjsdfjhsdfgjksdfgfdhjdfghdsauhvepuihnvnauurevanpuvgfdihgunvfaduhvdervgisfvdgnhsdgdgshsugvivgerspvers8gvnresguivgsdfgvrsedusdgfsdgufubgsdfhisfdfhjsdfgjhsdfhjsdfhjsdfjhsdghjsdgjsdghjsdgffhjsdfjhsdfjhsdfjhsdfhjsdfhjsdfjhsdfgjksdfgfdhjdfghdsauhvepuihnvnauurevanpuvgfdihgunvfaduhvdervgisfvdgnhsdgdgshsugvivgerspvers8gvnresguivgsdfgvrsedusdgfsdgufubgsdfhisfdfhjsdfgjhsdfhjsdfhjsdfjhsdghjsdgjsdghjsdgffhjsdfjhsdfjhsdfjhsdfhjsdfhjsdfjhsdfgjksdfgfdhjdfghdsauhvepuihnvnauurevanpuvgfdihgunvfaduhvdervgisfvdgnhsdgdgshsugvivgerspvers8gvnresguivgsdfgvrsedusdgfsdgufubgsdfhisfdfhjsdfgjhsdfhjsdfhjsdfjhsdghjsdgjsdghjsdgffhjsdfjhsdfjhsdfjhsdfhjsdfhjsdfjhsdfgjksdfgfdhjdfghdsauhvepuihnvnauurevanpuvgfdihgunvfaduhvdervgisfvdgnhsdgdgshsugvivgerspvers8gvnresguivgsdfgvrsedusdgfsdgufubgsdfhisfdfhjsdfgjhsdfhjsdfhjsdfjhsdghjsdgjsdghjsdgffhjsdfjhsdfjhsdfjhsdfhjsdfhjsdfjhsdfgjksdfgfdhjdfghdsauhvepuihnvnauurevanpuvgfdihgunvfaduhvdervgisfvdgnhsdgdgshsugvivgerspvers8gvnresguivgsdfgvrsedusdgfsdgufubgsdfhisfdfhjsdfgjhsdfhjsdfhjsdfjhsdghjsdgjsdghjsdgffhjsdfjhsdfjhsdfjhsdfhjsdfhjsdfjhsdfgjksdfgfdhjdfghdsauhvepuihnvnauurevanpuvgfdihgunvfaduhvdervgisfvdgnhsdgdgshsugvivgerspvers8gvnresguivgsdfgvrsedu!"));
+                accepted.send(SerializationUtil.convertObjectToBytes(accepted.getConnectionInfo()));
                 return true;
             }
 
             @Override
             public final boolean receive(byte[] data, TCPConnection connection) {
-                System.out.println(String.format("[SERVER] Received data from \"%s\": %s", connection.getConnectionInfo(), NetworkUtil.convertBytesToObject(data)));
+                System.out.println(String.format("[SERVER] Received data from \"%s\": %s", connection.getConnectionInfo(), SerializationUtil.convertBytesToObject(data)));
                 return true;
             }
         };
@@ -41,9 +42,9 @@ public class Test {
             @Override
             public final boolean receive(byte[] data) {
                 try {
-                    System.out.println(String.format("[CLIENT] \"%s\" Received data: %s", getConnectionInfo(), NetworkUtil.convertBytesToObject(data)));
+                    System.out.println(String.format("[CLIENT] \"%s\" Received data: %s", getConnectionInfo(), SerializationUtil.convertBytesToObject(data)));
                     Thread.sleep(1000);
-                    send(NetworkUtil.convertObjectToBytes("Selber Hi!"));
+                    send(SerializationUtil.convertObjectToBytes("Selber Hi!"));
                     return true;
                 } catch (Exception ex) {
                     ex.printStackTrace();

@@ -2,9 +2,9 @@ package de.codemakers.net;
 
 import de.codemakers.net.connection.AbstractConnection;
 import de.codemakers.net.connection.ConnectionInfo;
+import de.codemakers.serialization.SerializationUtil;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -61,34 +61,11 @@ public class NetworkUtil {
         }).start();
     }
 
-    public static final byte[] convertObjectToBytes(Object object) {
-        try {
-            try (ByteArrayOutputStream baos = new ByteArrayOutputStream(); ObjectOutputStream oos = new ObjectOutputStream(baos)) {
-                oos.writeObject(object);
-                return baos.toByteArray();
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return null;
-        }
-    }
-
-    public static final Object convertBytesToObject(byte[] data) {
-        try {
-            try (ByteArrayInputStream bais = new ByteArrayInputStream(data); ObjectInputStream ois = new ObjectInputStream(bais)) {
-                return ois.readObject();
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return null;
-        }
-    }
-
     public static final boolean sendObject(Object object, AbstractConnection connection) {
         if (connection == null) {
             return false;
         }
-        return connection.send(convertObjectToBytes(object));
+        return connection.send(SerializationUtil.convertObjectToBytes(object));
     }
 
 }
