@@ -35,7 +35,8 @@ public class SQLDatabase extends Database {
             this.info = info;
         }
         try {
-            connection = DriverManager.getConnection("jdbc:mysql://" + this.info.getHostname() + "/" + this.info.getDatabase(), this.info.getUsername(), new String(this.info.getPassword()));
+            //connection = DriverManager.getConnection("jdbc:mysql://" + this.info.getHostname() + "/" + this.info.getDatabase(), this.info.getUsername(), new String(this.info.getPassword()));
+            connection = DriverManager.getConnection(String.format("jdbc:mysql://%s/%s?user=%s&password=%s", this.info.getHostname(), this.info.getDatabase(), this.info.getUsername(), new String(this.info.getPassword())));
             return isConnected();
         } catch (Exception ex) {
             Logger.logErr("Error while opening connection", ex);
